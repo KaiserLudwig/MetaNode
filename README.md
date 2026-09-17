@@ -11,6 +11,7 @@
 | [eth-client](eth-client/) | 阶段 B / D | 用 go-ethereum 连接 Sepolia：查余额/区块/交易/gas、构造并签名广播转账；ERC-20 / ERC-721 / Uniswap V2 只读查询 | `sh scripts/eth.sh test`、`sh scripts/eth.sh dryrun` |
 | [blog-backend](blog-backend/) | Go 后端作业 | Gin + GORM + JWT 个人博客后端：注册登录、文章 CRUD、评论、作者权限、统一错误码与结构化日志，附零依赖前端 SPA | `sh scripts/build.sh`、`sh scripts/api_test.sh` |
 | [go-learn-demo](go-learn-demo/) | Go 语言练习 | 指针、Goroutine、面向对象、Channel、锁机制、GORM 共 13 道题，CLI + Web 双形态，附过程动画 | `sh scripts/build_check.sh` |
+| [contract/homework01](contract/homework01/) | 合约作业 01 | Solidity 六道题：Voting 投票合约、字符串反转、整数/罗马数字互转、合并有序数组、二分查找 | `cd contract/homework01 && forge test` |
 
 ## 快速开始
 
@@ -29,6 +30,9 @@ sh scripts/api_test.sh
 
 # Go 语言练习：编译检查 + 启动 Web 演示
 cd go-learn-demo && sh scripts/build_check.sh && sh scripts/start_web.sh
+
+# 合约作业 01：Foundry 测试
+cd contract/homework01 && forge test
 ```
 
 ## 环境说明
