@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/demo-anim.css">
+<title>{{if .Task}}任务 {{.Task.ID}} - {{.Task.Title}}{{else}}Go 学习任务演示{{end}}</title>
+<style>
+  :root { --bg:#f5f6f8; --card:#fff; --line:#e3e6ea; --accent:#2563eb; --text:#1f2430; --muted:#6b7280; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif; background:var(--bg); color:var(--text); }
+  header { background:#111827; color:#fff; padding:22px 0; }
+  header .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  header h1 { margin:0 0 6px; font-size:22px; }
+  header p { margin:0; color:#9ca3af; font-size:14px; }
+  .wrap { max-width:900px; margin:0 auto; padding:20px; }
+  h2.topic { margin:22px 0 10px; font-size:17px; color:var(--accent); border-bottom:2px solid var(--line); padding-bottom:6px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+  .card { display:flex; gap:12px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; text-decoration:none; color:inherit; transition:box-shadow .15s,border-color .15s; }
+  .card:hover { border-color:var(--accent); box-shadow:0 3px 12px rgba(37,99,235,.15); }
+  .no { flex:none; width:30px; height:30px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .card .title { font-size:14.5px; }
+  .task h2 { margin:4px 0 6px; }
+  .points { color:var(--muted); font-size:13.5px; margin:0 0 14px; }
+  h3 { font-size:14px; margin:18px 0 6px; color:#374151; }
+  pre { background:#0f172a; color:#e2e8f0; padding:14px 16px; border-radius:10px; overflow-x:auto; font-family:Consolas,"Courier New",monospace; font-size:13px; line-height:1.55; }
+  pre.output { background:#f0fdf4; color:#14532d; border:1px solid #bbf7d0; }
+  .back { display:inline-block; margin-top:16px; color:var(--accent); text-decoration:none; font-size:14px; }
+  footer { text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Go 学习任务演示</h1>
+    <p>指针 · Goroutine · 面向对象 · Channel · 锁机制（Web 版，基于 metanode-demo）</p>
+  </div>
+</header>
+<div class="wrap">
+{{if .Task}}
+  <p><a class="back" href="/">← 返回菜单</a></p>
+  <div class="task">
+    <h2>【{{.Task.ID}}】[{{.Task.Topic}}] {{.Task.Title}}</h2>
+    <p class="points">考察点：{{.Task.Points}}</p>
+
+    <h3>▶ 过程动画演示</h3>
+    <div class="stage-card">
+      <div class="stage-head">
+        <span class="stage-title">🎬 执行过程动画</span>
+        <span class="stage-badge" id="stage-badge">待运行</span>
+        <span class="stage-speed" id="stage-speed">1x</span>
+      </div>
+      <div class="stage-canvas" id="stage-canvas"></div>
+      <div class="stage-subtitle" id="stage-subtitle">点击「运行动画」，观看本任务执行过程。</div>
+      <div class="stage-actions">
+        <button class="btn-run" id="btn-run" type="button">▶ 运行动画</button>
+        <button class="btn-ghost" id="btn-replay" type="button" disabled>🔄 重播</button>
+        <button class="btn-ghost" id="btn-speed" type="button">速度 1x</button>
+      </div>
+    </div>
+
+    <h3>▶ 真实运行结果</h3>
+    <pre class="output" id="real-output">{{.Output}}</pre>
+    <h3>▶ 源码（{{.Task.File}}）</h3>
+    <pre>{{.Source}}</pre>
+  </div>
+  <script src="/static/demo-anim.js"></script>
+  <script src="/static/demos/pointer.js"></script>
+  <script src="/static/demos/pointer_slice.js"></script>
+  <script src="/static/demos/goroutine.js"></script>
+  <script src="/static/demos/scheduler.js"></script>
+  <script src="/static/demos/shape.js"></script>
+  <script src="/static/demos/employee.js"></script>
+  <script src="/static/demos/channel.js"></script>
+  <script src="/static/demos/buffered.js"></script>
+  <script src="/static/demos/mutex.js"></script>
+  <script src="/static/demos/atomic.js"></script>
+  <script src="/static/demos/gorm_models.js"></script>
+  <script src="/static/demos/gorm_query.js"></script>
+  <script src="/static/demos/gorm_hooks.js"></script>
+  <script>{{.BootScript}}</script>
+{{else}}
+  {{range .Groups}}
+    <h2 class="topic">[{{.Topic}}]</h2>
+    <div class="grid">
+      {{range .Tasks}}
+      <a class="card" href="/task?id={{.ID}}">
+        <span class="no">{{.ID}}</span>
+        <span class="title">{{.Title}}</span>
+      </a>
+      {{end}}
+    </div>
+  {{end}}
+  <p style="color:var(--muted);font-size:13px;margin-top:22px">点击卡片运行对应任务：展示题目、考察点、运行结果与完整源码。</p>
+{{end}}
+</div>
+<footer>MetaNode · Go 后端求职学习 · 服务运行于 WSL2，已通过 localhost 转发到 Windows</footer>
+</body>
+</html>

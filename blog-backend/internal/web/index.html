@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog API · Go + Gin + GORM</title>
+<style>
+  :root { --bg:#0c1322; --card:#111b31; --line:#1e2a44; --accent:#8b5cf6; --text:#e2e8f0; --muted:#94a3b8; --green:#4ade80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+  header { padding:34px 24px 20px; text-align:center; border-bottom:1px solid var(--line);
+    background:radial-gradient(900px 300px at 50% -20%, #1d2a4d 0%, var(--bg) 70%); }
+  header h1 { margin:0 0 6px; font-size:26px; }
+  header h1 span { color:var(--accent); }
+  header p { margin:0; color:var(--muted); font-size:14px; }
+  .wrap { max-width:880px; margin:0 auto; padding:24px; }
+  .demo { background:#12261a; border:1px solid #1f5135; border-radius:10px; padding:12px 16px;
+    font-size:13.5px; color:#a7f3d0; margin-bottom:22px; }
+  .demo code { background:#0b1a12; padding:2px 8px; border-radius:5px; color:var(--green); }
+  table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  th, td { text-align:left; padding:9px 14px; font-size:13.5px; border-bottom:1px solid var(--line); }
+  th { background:#16203a; color:#a5b4fc; font-weight:600; }
+  tr:last-child td { border-bottom:none; }
+  td code { color:#7dd3fc; font-family:Consolas,monospace; font-size:12.5px; }
+  .method { display:inline-block; min-width:56px; text-align:center; padding:2px 8px; border-radius:5px; font-size:11.5px; font-weight:700; font-family:Consolas,monospace; }
+  .m-get { background:#0c2f24; color:var(--green); }
+  .m-post { background:#0e2a3d; color:#38bdf8; }
+  .m-put { background:#33270c; color:#fbbf24; }
+  .m-delete { background:#3d1414; color:#f87171; }
+  .auth { color:var(--muted); font-size:12px; }
+  .auth.y { color:#fbbf24; }
+  .cmd { background:#0a0f1d; border:1px solid var(--line); border-radius:8px; padding:12px 14px; font-family:Consolas,monospace; font-size:12.5px; color:#a5b4fc; overflow-x:auto; }
+  footer { text-align:center; color:var(--muted); font-size:12.5px; padding:26px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📝 Blog <span>API</span></h1>
+  <p>个人博客系统后端 · Go + Gin + GORM + JWT · 服务运行中</p>
+</header>
+<div class="wrap">
+  <div class="demo">
+    🎯 演示账号：<code>demo / demo123456</code> &nbsp;·&nbsp; 认证方式：<code>Authorization: Bearer &lt;token&gt;</code>
+  </div>
+  <table>
+    <tr><th>方法</th><th>路径</th><th>认证</th><th>说明</th></tr>
+    <tr><td><span class="method m-get">GET</span></td><td><code>/api/v1/healthz</code></td><td class="auth">-</td><td>健康检查</td></tr>
+    <tr><td><span class="method m-post">POST</span></td><td><code>/api/v1/auth/register</code></td><td class="auth">-</td><td>注册 {username, password, email}</td></tr>
+    <tr><td><span class="method m-post">POST</span></td><td><code>/api/v1/auth/login</code></td><td class="auth">-</td><td>登录，返回 JWT + 用户信息</td></tr>
+    <tr><td><span class="method m-get">GET</span></td><td><code>/api/v1/auth/me</code></td><td class="auth y">✅</td><td>当前登录用户信息</td></tr>
+    <tr><td><span class="method m-get">GET</span></td><td><code>/api/v1/posts?page=1&amp;size=10</code></td><td class="auth">-</td><td>文章列表（分页，含作者与评论数）</td></tr>
+    <tr><td><span class="method m-get">GET</span></td><td><code>/api/v1/posts/:id</code></td><td class="auth">-</td><td>文章详情</td></tr>
+    <tr><td><span class="method m-post">POST</span></td><td><code>/api/v1/posts</code></td><td class="auth y">✅</td><td>创建文章 {title, content}</td></tr>
+    <tr><td><span class="method m-put">PUT</span></td><td><code>/api/v1/posts/:id</code></td><td class="auth y">✅ 作者</td><td>更新文章（部分字段更新）</td></tr>
+    <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/v1/posts/:id</code></td><td class="auth y">✅ 作者</td><td>删除文章（级联删除评论）</td></tr>
+    <tr><td><span class="method m-get">GET</span></td><td><code>/api/v1/posts/:id/comments</code></td><td class="auth">-</td><td>文章评论列表</td></tr>
+    <tr><td><span class="method m-post">POST</span></td><td><code>/api/v1/posts/:id/comments</code></td><td class="auth y">✅</td><td>发表评论 {content}</td></tr>
+  </table>
+
+  <p style="color:var(--muted);font-size:13px;margin-top:22px">快速体验：</p>
+  <pre class="cmd"># 登录拿令牌
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"demo","password":"demo123456"}'
+
+# 查看文章列表
+curl http://localhost:8080/api/v1/posts</pre>
+</div>
+<footer>Blog Backend · 统一响应 {code, message, data} · 未知路径返回 JSON 404</footer>
+</body>
+</html>

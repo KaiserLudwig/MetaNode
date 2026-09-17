@@ -1,0 +1,12 @@
+# 编译产物
+demo
+webdemo
+
+# 日志
+logs/
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

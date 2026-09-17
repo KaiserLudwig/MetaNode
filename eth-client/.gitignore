@@ -1,0 +1,6 @@
+# 构建产物
+eth-client
+*.exe
+
+# 日志
+*.log

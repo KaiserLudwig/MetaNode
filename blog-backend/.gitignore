@@ -1,0 +1,16 @@
+# 编译产物
+blog-server
+
+# 数据库文件（运行时生成，clone 后自动重建）
+blog.db
+*.db
+
+# 日志
+logs/
+*.log
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
