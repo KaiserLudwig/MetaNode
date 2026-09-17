@@ -13,6 +13,7 @@
 | [go-learn-demo](go-learn-demo/) | Go 语言练习 | 指针、Goroutine、面向对象、Channel、锁机制、GORM 共 13 道题，CLI + Web 双形态，附过程动画 | `sh scripts/build_check.sh` |
 | [contract/homework01](contract/homework01/) | 合约作业 01 | Solidity 六道题：Voting 投票合约、字符串反转、整数/罗马数字互转、合并有序数组、二分查找 | `cd contract/homework01 && forge test` |
 | [contract/homework02](contract/homework02/) | 合约作业 02 | 讨饭合约 BeggingContract：donate / withdraw / getDonation，含 onlyOwner、捐赠事件、排行榜与时间限制 | `cd contract/homework02 && forge test` |
+| [contract/homework03](contract/homework03/) | 合约大作业 | Hardhat NFT 拍卖市场：ERC721、ETH/ERC20 竞价、Chainlink 美元报价、UUPS 代理升级、动态手续费 | `cd contract/homework03 && npx hardhat test` |
 
 ## 快速开始
 
@@ -37,6 +38,9 @@ cd contract/homework01 && forge test
 
 # 合约作业 02：Foundry 测试
 cd contract/homework02 && forge test
+
+# 合约大作业 03：Hardhat 测试（先 npm install）
+cd contract/homework03 && npm install && npx hardhat test
 ```
 
 ## 环境说明
