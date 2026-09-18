@@ -70,6 +70,35 @@ Verify and Publish（方式：Solidity Single file），关键参数：
 等价配置的 Standard-Json-Input 已归档在 [`verification/standard-json-input.json`](./verification/standard-json-input.json)，
 任何时候都能用它复现完全相同的字节码。
 
+## Etherscan 交互实测（2026-09-18）
+
+源码验证通过后，在 Etherscan 上完成了一轮真实交互测试（这正是作业要求的“测试截图”内容）：
+
+| 操作 | 入口 | 结果 |
+|---|---|---|
+| `donorCount()` | Read Contract | `2` |
+| `getDonation(0x22d2…1F5C)` | Read Contract | `1000000000000000`（0.001 ETH） |
+| `totalDonated()` | Read Contract | `1500000000000000`（0.0015 ETH） |
+| `donate()` 0.001 ETH | Write Contract + MetaMask | 交易 `0x1093bea8a24e456c050bc4d53ab4e59069d67bef468b07535f4fa6482dd813db`（区块 11728988） |
+
+新增捐赠后链上状态更新为：
+
+```
+getDonation(0x22d2…1F5C) = 2000000000000000   （0.002 ETH，累计）
+getDonation(0xe0bc…f355) =  500000000000000   （0.0005 ETH）
+totalDonated             = 2500000000000000   （0.0025 ETH）
+donorCount               = 2
+合约余额                  = 1000000000000000   （0.001 ETH，待 owner 提取）
+```
+
+三笔 `Donation` 事件均可在链上日志中查到（主题 `0xc7527093…f53bf1`）：
+
+| 区块 | 捐赠者 | 金额 | 累计 | 交易 |
+|---|---|---|---|---|
+| 11727292 | `0x22d2…1F5C` | 0.001 | 0.001 | `0x29d94dce…b00a1f` |
+| 11727296 | `0xe0bc…f355` | 0.0005 | 0.0015 | `0xe30052cf…9ce5b` |
+| 11728988 | `0x22d2…1F5C` | 0.001 | 0.0025 | `0x1093bea8…813db` |
+
 ## 测试截图清单（作业要求「测试截图」）
 
 在自己浏览器打开下列页面截图即可，都对应上表中的真实交易：
