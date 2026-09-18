@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "src/BeggingContract.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\n/// @title BeggingContract 讨饭合约\n/// @notice 任何人都能向合约捐赠 ETH，合约记录每位捐赠者的累计金额，由 owner 提取全部资金\ncontract BeggingContract {\n    /// @notice 合约所有者（部署者），资金只能由它提取\n    address payable public immutable owner;\n\n    /// @notice 捐赠者地址 => 累计捐赠金额（wei）\n    mapping(address => uint256) private _donations;\n\n    /// @notice 捐赠者首次捐赠的顺序，用于排行榜\n    address[] private _donors;\n\n    /// @notice 该地址是否已经捐赠过\n    mapping(address => bool) private _hasDonated;\n\n    /// @notice 累计收到的捐赠总额（wei）\n    uint256 public totalDonated;\n\n    /// @notice 捐赠开放时间窗的起点，0 表示不限制\n    uint256 public startTime;\n\n    /// @notice 捐赠开放时间窗的终点，0 表示不限制\n    uint256 public endTime;\n\n    /// @param donor 捐赠者\n    /// @param amount 本次捐赠金额\n    /// @param donorTotal 该捐赠者累计金额\n    /// @param totalDonated 合约累计金额\n    event Donation(address indexed donor, uint256 amount, uint256 donorTotal, uint256 totalDonated);\n\n    /// @param owner 收款人\n    /// @param amount 提取金额\n    event Withdrawal(address indexed owner, uint256 amount);\n\n    /// @param startTime 新的开放起点\n    /// @param endTime 新的开放终点\n    event DonationWindowUpdated(uint256 startTime, uint256 endTime);\n\n    /// @notice 仅限合约所有者\n    modifier onlyOwner() {\n        require(msg.sender == owner, \"BeggingContract: caller is not the owner\");\n        _;\n    }\n\n    constructor() {\n        owner = payable(msg.sender);\n    }\n\n    /// @notice 向合约捐赠 ETH，金额记在调用者名下\n    function donate() external payable {\n        _donate(msg.sender, msg.value);\n    }\n\n    /// @notice 直接把 ETH 转到合约地址同样计为捐赠\n    receive() external payable {\n        _donate(msg.sender, msg.value);\n    }\n\n    /// @notice 所有者提取合约里的全部余额\n    /// @dev 按作业要求使用 address.transfer（2300 gas）；生产环境更推荐 call 并处理返回值\n    function withdraw() external onlyOwner {\n        uint256 balance = address(this).balance;\n        require(balance > 0, \"BeggingContract: nothing to withdraw\");\n\n        emit Withdrawal(owner, balance);\n        owner.transfer(balance);\n    }\n\n    /// @notice 查询某个地址的累计捐赠金额\n    function getDonation(address donor) external view returns (uint256) {\n        return _donations[donor];\n    }\n\n    /// @notice 当前是否处于可捐赠状态\n    /// @dev 时间窗是作业要求的功能，这里的区块时间比较是预期行为\n    function isDonationOpen() public view returns (bool) {\n        // forge-lint: disable-next-line(block-timestamp)\n        if (startTime != 0 && block.timestamp < startTime) {\n            return false;\n        }\n        // forge-lint: disable-next-line(block-timestamp)\n        if (endTime != 0 && block.timestamp > endTime) {\n            return false;\n        }\n        return true;\n    }\n\n    /// @notice 捐赠者数量\n    function donorCount() external view returns (uint256) {\n        return _donors.length;\n    }\n\n    /// @notice 返回捐赠金额最高的前 3 名（不足 3 人时其余位置为 0）\n    function topDonors() external view returns (address[3] memory topAddresses, uint256[3] memory topAmounts) {\n        uint256[3] memory best;\n        address[3] memory who;\n\n        for (uint256 i = 0; i < _donors.length; i++) {\n            address donor = _donors[i];\n            uint256 amount = _donations[donor];\n\n            if (amount > best[0]) {\n                best[2] = best[1];\n                who[2] = who[1];\n                best[1] = best[0];\n                who[1] = who[0];\n                best[0] = amount;\n                who[0] = donor;\n            } else if (amount > best[1]) {\n                best[2] = best[1];\n                who[2] = who[1];\n                best[1] = amount;\n                who[1] = donor;\n            } else if (amount > best[2]) {\n                best[2] = amount;\n                who[2] = donor;\n            }\n        }\n\n        return (who, best);\n    }\n\n    /// @notice 设置捐赠时间窗（可选挑战 3）；传 0 表示该侧不限制\n    function setDonationWindow(uint256 newStartTime, uint256 newEndTime) external onlyOwner {\n        require(newEndTime == 0 || newStartTime == 0 || newEndTime > newStartTime, \"BeggingContract: invalid window\");\n        startTime = newStartTime;\n        endTime = newEndTime;\n        emit DonationWindowUpdated(newStartTime, newEndTime);\n    }\n\n    /// @dev 记账逻辑：donate() 与 receive() 共用\n    function _donate(address donor, uint256 amount) private {\n        require(amount > 0, \"BeggingContract: donation must be greater than 0\");\n        require(isDonationOpen(), \"BeggingContract: donation window is closed\");\n\n        if (!_hasDonated[donor]) {\n            _hasDonated[donor] = true;\n            _donors.push(donor);\n        }\n\n        _donations[donor] += amount;\n        totalDonated += amount;\n\n        emit Donation(donor, amount, _donations[donor], totalDonated);\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "remappings": [],
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "cancun",
+    "metadata": {
+      "bytecodeHash": "ipfs",
+      "appendCBOR": true,
+      "useLiteralContent": false
+    },
+    "libraries": {},
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    }
+  }
+}

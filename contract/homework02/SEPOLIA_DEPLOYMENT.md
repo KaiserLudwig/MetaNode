@@ -11,7 +11,7 @@
 | 合约地址 | `0x5c0eCb22f0D55965aC49D29A0f00862D45B3096d` |
 | 部署账户 | `0x22d2ad2336d958c5bF224cc346ce8f5Fb6741F5C` |
 | 编译设置 | solc 0.8.24，optimizer runs 200，evmVersion cancun |
-| 源码验证 | Sourcify `exact_match`（creation + runtime 均匹配） |
+| 源码验证 | Sourcify `exact_match`（creation + runtime 均匹配）；Etherscan 亦已验证（2026-09-18，参数见下） |
 | 浏览器 | https://sepolia.etherscan.io/address/0x5c0eCb22f0D55965aC49D29A0f00862D45B3096d |
 | Sourcify | https://repo.sourcify.dev/contracts/full_match/11155111/0x5c0eCb22f0D55965aC49D29A0f00862D45B3096d/ |
 
@@ -53,6 +53,22 @@ runtimeMatch:  exact_match
 > 说明：Etherscan 的 API 在本机网络下不可达（连接超时），因此改用同样公开、可自行核对的
 > Sourcify 完成源码验证。若需要在 Etherscan 上显示已验证源码，在能访问 etherscan.io 的网络下执行：
 > `forge verify-contract <地址> src/BeggingContract.sol:BeggingContract --chain sepolia --etherscan-api-key <KEY>`
+
+### Etherscan 验证记录
+
+已在 https://sepolia.etherscan.io/address/0x5c0eCb22f0D55965aC49D29A0f00862D45B3096d#code 完成
+Verify and Publish（方式：Solidity Single file），关键参数：
+
+| 参数 | 值 |
+|---|---|
+| Compiler | v0.8.24+commit.e11b9ed9 |
+| Optimization | **Yes**，Runs **200**（第一次失败就是因为误选成 No） |
+| EVM Version | cancun（solc 0.8.24 默认值） |
+| License | MIT |
+| Constructor Arguments | 空 |
+
+等价配置的 Standard-Json-Input 已归档在 [`verification/standard-json-input.json`](./verification/standard-json-input.json)，
+任何时候都能用它复现完全相同的字节码。
 
 ## 测试截图清单（作业要求「测试截图」）
 
