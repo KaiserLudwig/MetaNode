@@ -7,3 +7,5 @@ typechain-types/
 .env
 deployments/localhost.json
 deployments/hardhat.json
+forge-out/
+cache_forge/

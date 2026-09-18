@@ -168,10 +168,43 @@ NFTAuction 实现(V1):           0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
 
 | 合约 | 地址 |
 |---|---|
-| PriceOracle | _待部署_ |
-| AuctionNFT | _待部署_ |
-| NFTAuction（代理） | _待部署_ |
-| NFTAuctionV2（升级后实现） | _待部署_ |
+| PriceOracle | `0x5099d706fD639d31B81788D5990cD89E731BC75e` |
+| AuctionNFT | `0x8E9E55A32b1d3d00C7909602fe4e7C29EC261ab2` |
+| NFTAuction（UUPS 代理） | `0x692C0eF49770B554f800D795637bAA4a2727844d` |
+| NFTAuction V1 实现 | `0x0E51c1817c7893afA66c05785A14ac5c4987BE12` |
+| NFTAuctionV2 升级后实现 | `0xeab68589cf2b9c602d9c2a63349a9df88b8bf650` |
+
+部署与演示时间：2026-09-18（北京时间），部署账户 `0x22d2ad2336d958c5bF224cc346ce8f5Fb6741F5C`。
+四个合约均已在 Sourcify 通过源码验证（creation + runtime 均 match）。
+
+### 链上演示交易（全部 status = 1）
+
+| 步骤 | 交易哈希 | gas |
+|---|---|---|
+| 部署 PriceOracle / NFT / 拍卖代理 | 见 `deployments/sepolia.json` | — |
+| 铸造演示 NFT tokenId=1 | `0xed6306fb90608dc26e62fc88958b3c5e7638f5131dad65f612b75c165f198c02` | 120383 |
+| NFT 转给卖家账户 | `0x206cfcaaf6a1cd13b290d52a1466bd2ab53eaceda2336f52bd5f165a8bff908f` | — |
+| 卖家授权拍卖合约 | `0x6d48d62dc373597571aa75f1812d6e7be4efac4045e1bafd7f78b0f70a97d348` | — |
+| 创建拍卖（起拍 0.001 ETH，60 秒） | `0xefc4049705292a87c89083b50b235e65ca66c6f1b1b5869a3db663b3ba23e9f7` | 210026 |
+| 买家出价 0.001 ETH | `0x5a7c9fdc394f31d7adcaa729217302d237656da46d4cd126b9cba644aebfcc8d` | 93032 |
+| 结束拍卖并结算 | `0xafe6d75e6350d274623bded1b930bc62419e66450ee96791806ee5536cf182cf` | 130230 |
+| UUPS 升级到 V2 | `0x6b531c7fe6db66be68914abadfeb239b7f6c1b882bdc4616a55458c1b867f0ca` | 226279 |
+| 初始化最小加价 500 bps | `0x832246e2aa694bc32c58bb6eab817776cbdbb7b8ba4903a3bd193c6055b4f4eb` | — |
+
+链上结果：拍卖结算后 NFT 归买家 `0x22d2…1F5C`、拍卖合约余额归零、卖家收到扣除 0.5% 手续费后的资金；
+升级后 `version()` 从 `1.0.0` 变为 `2.0.0`，`minBidIncrementBps` = 500，`auctionCount` 与 owner、预言机地址全部保留。
+
+### 部署截图
+
+| 合约 | Sourcify 验证 |
+|---|---|
+| PriceOracle | ![PriceOracle](./screenshots/sourcify-priceoracle.png) |
+| AuctionNFT | ![AuctionNFT](./screenshots/sourcify-auctionnft.png) |
+| NFTAuction V1 实现 | ![NFTAuction V1](./screenshots/sourcify-nftauction-v1.png) |
+| NFTAuctionV2 实现 | ![NFTAuctionV2](./screenshots/sourcify-nftauction-v2.png) |
+
+完整部署参数见 [`deployments/sepolia.json`](deployments/sepolia.json)，链上核对入口：
+拍卖代理 https://sepolia.etherscan.io/address/0x692C0eF49770B554f800D795637bAA4a2727844d
 
 ## 已知限制
 

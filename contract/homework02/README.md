@@ -73,11 +73,17 @@ forge verify-contract <合约地址> src/BeggingContract.sol:BeggingContract --c
 | 项目 | 值 |
 |---|---|
 | 网络 | Sepolia（chainId 11155111） |
-| 合约地址 | _待部署后填写_ |
-| 部署交易 | _待部署后填写_ |
-| 示例捐赠交易 | _待部署后填写_ |
-| 提款交易 | _待部署后填写_ |
-| 测试截图 | _待部署后补充_ |
+| 合约地址 | `0x5c0eCb22f0D55965aC49D29A0f00862D45B3096d` |
+| 部署交易 | `0x308c5bb848b31213f0c3b3af0c010bc9449491829cbe8a8aa9a8cf50c16158eb` |
+| 示例捐赠交易 | `0x29d94dce7c9eba391849adf06002a01c464aee93ca09a9641c666f44b1b00a1f`（0.001 ETH） |
+| 第二笔捐赠（receive） | `0xe30052cf09ec20030a505dc1e2bbaa5e4ad4289b59e2f50889702f30ec99ce5b`（0.0005 ETH） |
+| 提款交易 | `0x7274d239f66dc34065fcab168a3cb813642af2c547f900a1c004e3e6c00a2848` |
+| 源码验证 | Sourcify `exact_match`（Etherscan API 在本机不可达） |
+| 详细记录与截图清单 | [SEPOLIA_DEPLOYMENT.md](./SEPOLIA_DEPLOYMENT.md) |
+
+部署验证截图（Sourcify，Exact Match）：
+
+![Sourcify 验证](./screenshots/sourcify-verified.png)
 
 ## 实现说明
 
