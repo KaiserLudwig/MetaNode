@@ -120,6 +120,12 @@ createAuction ──► Created ──(时间到 + endAuction)──► Ended
 | **contracts/ 合计** | **97.25** | **85.19** | **100** | **97.56** |
 | 全部（含 mocks） | 95.16 | 85 | 91.49 | 95.24 |
 
+覆盖率报告截图（`npx hardhat coverage` 生成）：
+
+![覆盖率总览](./screenshots/coverage-summary.png)
+
+![分合约覆盖率](./screenshots/coverage-contracts.png)
+
 覆盖的关键场景：
 
 - NFT：铸造、tokenURI、转移、授权、接口支持、权限校验
