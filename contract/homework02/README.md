@@ -82,9 +82,25 @@ forge verify-contract <合约地址> src/BeggingContract.sol:BeggingContract --c
 | 源码验证 | Sourcify `exact_match` + Etherscan Verify and Publish 均已通过 |
 | 详细记录与截图清单 | [SEPOLIA_DEPLOYMENT.md](./SEPOLIA_DEPLOYMENT.md) |
 
-部署验证截图（Sourcify，Exact Match）：
+## 测试截图（作业提交项）
 
-![Sourcify 验证](./screenshots/sourcify-verified.png)
+Sepolia 真链上的完整测试证据，全部可在区块浏览器按交易哈希核对：
+
+| 截图 | 内容 | 文件 |
+|---|---|---|
+| Etherscan 合约页（源码已验证） | `Source Code` 标识 + Code / Read / Write 三个标签 | [etherscan-contract-verified.png](./screenshots/etherscan-contract-verified.png) |
+| Read Contract 调用结果 | `donorCount`、`getDonation` 返回 `1000000000000000` | [etherscan-read-contract-getdonation.png](./screenshots/etherscan-read-contract-getdonation.png) |
+| Read Contract 全量视图 | `getDonation` / `owner` / `topDonors` / `totalDonated` | [etherscan-read-contract-overview.png](./screenshots/etherscan-read-contract-overview.png) |
+| Write Contract · donate | 连接 MetaMask，捐赠 0.001 ETH，交易成功 | [etherscan-write-contract-donate.png](./screenshots/etherscan-write-contract-donate.png) |
+| MetaMask 确认 withdraw | 请求来自 sepolia.etherscan.io，确认提取资金 | [etherscan-metamask-withdraw-confirm.png](./screenshots/etherscan-metamask-withdraw-confirm.png) |
+| Remix 编译与部署 | Remix 2.5.7 编译 `BeggingContract` 并部署出 Contracts 实例 | [remix-compile-and-deploy.png](./screenshots/remix-compile-and-deploy.png) |
+| Sourcify 源码验证 | `Exact Match`（creation + runtime） | [sourcify-verified.png](./screenshots/sourcify-verified.png) |
+
+![Etherscan 合约页](./screenshots/etherscan-contract-verified.png)
+
+![Etherscan Read Contract](./screenshots/etherscan-read-contract-getdonation.png)
+
+![Etherscan Write Contract donate](./screenshots/etherscan-write-contract-donate.png)
 
 ## 实现说明
 
