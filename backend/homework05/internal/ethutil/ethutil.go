@@ -1,0 +1,58 @@
+// Package ethutil 封装 RPC 连接与私钥加载，供三个命令行程序共用。
+package ethutil
+
+import (
+	"context"
+	"crypto/ecdsa"
+	"errors"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+// RPCURL 依次尝试：SEPOLIA_RPC_URL -> 用 INFURA_API_KEY 组装 Infura 地址 -> 公共节点。
+func RPCURL() string {
+	if v := strings.TrimSpace(os.Getenv("SEPOLIA_RPC_URL")); v != "" {
+		return v
+	}
+	if key := strings.TrimSpace(os.Getenv("INFURA_API_KEY")); key != "" {
+		return "https://sepolia.infura.io/v3/" + key
+	}
+	return "https://ethereum-sepolia-rpc.publicnode.com"
+}
+
+// Dial 建立到 Sepolia 的 ethclient 连接，同时返回实际使用的 RPC 地址。
+func Dial(ctx context.Context) (*ethclient.Client, string, error) {
+	url := RPCURL()
+	client, err := ethclient.DialContext(ctx, url)
+	if err != nil {
+		return nil, url, fmt.Errorf("连接 %s 失败: %w", url, err)
+	}
+	return client, url, nil
+}
+
+// PrivateKey 从 PRIVATE_KEY 环境变量解析私钥，并返回对应地址。
+func PrivateKey() (*ecdsa.PrivateKey, common.Address, error) {
+	raw := strings.TrimSpace(os.Getenv("PRIVATE_KEY"))
+	if raw == "" {
+		return nil, common.Address{}, errors.New("请先设置 PRIVATE_KEY 环境变量（0x 开头的 64 位十六进制私钥）")
+	}
+	priv, err := crypto.HexToECDSA(strings.TrimPrefix(raw, "0x"))
+	if err != nil {
+		return nil, common.Address{}, fmt.Errorf("解析私钥失败: %w", err)
+	}
+	return priv, crypto.PubkeyToAddress(priv.PublicKey), nil
+}
+
+// PublicKey 解析 PRIVATE_KEY 并返回对应的公钥（十六进制字符串，便于打印）。
+func PublicKey() (string, error) {
+	priv, _, err := PrivateKey()
+	if err != nil {
+		return "", err
+	}
+	return crypto.PubkeyToAddress(priv.PublicKey).Hex(), nil
+}

@@ -1,0 +1,12 @@
+========== 任务 2-3：用 abigen 绑定调用链上合约 ==========
+RPC 节点 : https://ethereum-sepolia-rpc.publicnode.com
+调用账户 : 0x22d2ad2336d958c5bF224cc346ce8f5Fb6741F5C
+合约已部署: 0x77176Ed6b75165d53bdca916F2FAbf51AcFEca68
+ 部署交易 : 0x8c5bb54cd51db4fa263764204e52aba35f409d9f1f3cfc61e5665105bbeb43a3（区块 11744114, gas 221460）
+部署后初值            计数 = 100
+调用 inc() 交易: 0xecfefaecbc0f98c1bb7462e182742655ce2d76e49cd361e8da2b1855caaefb6c（区块 11744115, gas 27824）
+inc() 之后         计数 = 101
+调用 incBy(5) 交易: 0x005121f8a8d3da34e7c2016b21e15a22ed76fca3b4b5428b1e4a46b2a803c729（区块 11744116, gas 28085）
+incBy(5) 之后      计数 = 106
+合约 owner: 0x22d2ad2336d958c5bF224cc346ce8f5Fb6741F5C
+=========================================================

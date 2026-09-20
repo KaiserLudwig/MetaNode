@@ -14,6 +14,7 @@
 | [contract/homework01](contract/homework01/) | 合约作业 01 | Solidity 六道题：Voting 投票合约、字符串反转、整数/罗马数字互转、合并有序数组、二分查找 | `cd contract/homework01 && forge test` |
 | [contract/homework02](contract/homework02/) | 合约作业 02 | 讨饭合约 BeggingContract：donate / withdraw / getDonation，含 onlyOwner、捐赠事件、排行榜与时间限制 | `cd contract/homework02 && forge test` |
 | [contract/homework03](contract/homework03/) | 合约大作业 | Hardhat NFT 拍卖市场：ERC721、ETH/ERC20 竞价、Chainlink 美元报价、UUPS 代理升级、动态手续费 | `cd contract/homework03 && npx hardhat test` |
+| [backend/homework05](backend/homework05/) | 后端作业 05 | Go + go-ethereum：Sepolia 区块查询、ETH 转账签名广播、abigen 生成的合约绑定与链上调用 | `cd backend/homework05 && sh scripts/demo.sh` |
 
 ## 快速开始
 
@@ -41,6 +42,9 @@ cd contract/homework02 && forge test
 
 # 合约大作业 03：Hardhat 测试（先 npm install）
 cd contract/homework03 && npm install && npx hardhat test
+
+# 后端作业 05：链上读写 + abigen 绑定（需要 PRIVATE_KEY 环境变量）
+cd backend/homework05 && sh scripts/demo.sh
 ```
 
 ## 环境说明
