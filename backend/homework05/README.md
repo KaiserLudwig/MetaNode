@@ -7,8 +7,8 @@
 
 | 作业要求 | 实现位置 | 验证结果 |
 |---|---|---|
-| 任务 1-1 环境搭建（Go、go-ethereum、Infura） | `go.mod`（go-ethereum v1.15.0）、`internal/ethutil` | Go 1.23.4 + go-ethereum v1.15.0；RPC 支持 `INFURA_API_KEY` 或自定义 `SEPOLIA_RPC_URL` |
-| 任务 1-2 查询区块（哈希/时间戳/交易数等） | [`cmd/blockquery/main.go`](cmd/blockquery/main.go) | 查询区块 11727291，输出哈希、父哈希、时间戳、交易数 164、Gas、BaseFee 等 |
+| 任务 1-1 环境搭建（Go、go-ethereum、Infura） | `go.mod`（go-ethereum v1.15.0）、`internal/ethutil` | Go 1.23.4 + go-ethereum v1.15.0；支持 `INFURA_API_KEY` 或自定义 `SEPOLIA_RPC_URL`；Infura 查询证据见 `evidence/04-infura-blockquery.log` |
+| 任务 1-2 查询区块（哈希/时间戳/交易数等） | [`cmd/blockquery/main.go`](cmd/blockquery/main.go) | 查询区块 11727291，输出哈希、父哈希、时间戳、交易数 164、Gas、BaseFee 等；另用 Infura 复查，见 `evidence/04-infura-blockquery.log` |
 | 任务 1-3 构造、签名、广播转账交易 | [`cmd/sendtx/main.go`](cmd/sendtx/main.go) | 转账 0.0001 ETH，交易 `0x2b3821ff…c79a`，区块 11744112，gas 21000，状态成功 |
 | 任务 2-1 编写并编译计数器合约 | [`contracts/Counter.sol`](contracts/Counter.sol)、`contracts/Counter.abi`、`contracts/Counter.bin` | solc 0.8.24 编译通过，生成 ABI + 字节码 |
 | 任务 2-2 安装 abigen 并生成 Go 绑定 | [`scripts/compile.sh`](scripts/compile.sh)、[`bindings/counter/counter.go`](bindings/counter/counter.go) | abigen v1.15.0 生成绑定代码 |
@@ -81,6 +81,8 @@ sh scripts/demo.sh
 ## 本次 Sepolia 实测结果
 
 运行日志见 [`evidence/`](evidence/)。
+
+另使用 `INFURA_API_KEY` 通过 Infura Sepolia endpoint 只读复查区块 11727291；返回值与上表一致。新增日志只记录提供商标签，不记录 endpoint 中的 API Key：[`evidence/04-infura-blockquery.log`](evidence/04-infura-blockquery.log)。
 
 | 任务 | 结果 | 交易哈希 | 区块 | gas |
 |---|---|---|---|---|
